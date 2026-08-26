@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y gnupg2 tree
+
+      - name: Run sharness test suite
+        run: make test
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: shellcheck (errors fail the build)
+        run: shellcheck -S error src/password-store.sh
+
+      - name: shellcheck (full report, informational)
+        if: always()
+        run: shellcheck src/password-store.sh || true
