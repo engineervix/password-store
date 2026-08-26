@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Fake wl-copy for testing pass's clip() --sensitive handling.
+#
+# Logs each real invocation's args to $WL_COPY_LOG (must be exported by the
+# caller -- plain shell vars don't reach this child process), one line per
+# call. --help output advertises --sensitive only when
+# FAKE_WL_COPY_SENSITIVE is set, so tests can exercise both the
+# wl-clipboard-supports-it and doesn't-support-it paths.
+
+if [[ $1 == "--help" ]]; then
+	echo "Usage: wl-copy [OPTIONS] [TEXT]"
+	if [[ -n $FAKE_WL_COPY_SENSITIVE ]]; then
+		echo "    --sensitive         Hint that the content is sensitive."
+	fi
+	exit 0
+fi
+
+echo "$*" >>"$WL_COPY_LOG"
+cat >/dev/null
+exit 0

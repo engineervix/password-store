@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Fake wl-paste for testing pass's clip(). Always reports an empty
+# clipboard -- callers only care about wl-copy's invocation args here.
+exit 0
